@@ -10,6 +10,7 @@ interface IRequest {
   username: string;
   email: string;
   password: string;
+  role: string;
 }
 
 export default class CreateUserService {
@@ -25,6 +26,7 @@ export default class CreateUserService {
     username,
     email,
     password,
+    role,
   }: IRequest): Promise<{ user: User; token: string }> {
     if (!name) throw new AppError("Invalid or missing name", 400);
     if (!username) throw new AppError("Invalid or missing username", 400);
@@ -37,9 +39,12 @@ export default class CreateUserService {
     if (await this.userRepository.userExist({ username }))
       throw new AppError("Username already registered", 400);
 
-    if (password.length < 6)
+    if (role === "admin") {
+      if (password.length < 10)
+        throw new AppError("Password must have at least ten characteres", 400);
+    } else if (password.length < 6)
       throw new AppError("Password must have at least six characteres", 400);
-
+    
     const id = this.idGenerator.getId();
 
     const hashedPassword = await this.cryptoManager.encrypt(password);
@@ -50,13 +55,13 @@ export default class CreateUserService {
       name,
       username,
       password: hashedPassword,
-      role: "regular",
+      role,
       approved: false,
     };
 
     await this.userRepository.createUser(user);
 
-    const token = this.authenticator.getToken({ id, role: user.role });
+    const token = this.authenticator.getToken({ id, role });
 
     return { user, token };
   }

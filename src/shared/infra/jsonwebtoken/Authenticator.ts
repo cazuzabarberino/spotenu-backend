@@ -10,6 +10,9 @@ export default class Authenticator implements IAuthenticator {
   public getData(token: string) {
     try {
       const payload = jwt.verify(token, process.env.JWT_KEY as string);
+
+      console.log(payload);
+
       return payload as TokenData;
     } catch (err) {
       throw new AppError("Invalid JWT token", 401);
