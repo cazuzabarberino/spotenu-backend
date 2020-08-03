@@ -8,6 +8,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string("email", 255).notNullable();
     table.string("password", 255).notNullable();
     table.enum("role", ["admin", "band", "regular", "premium"]).notNullable();
+    table.boolean("approved").defaultTo(false);
   });
 }
 
