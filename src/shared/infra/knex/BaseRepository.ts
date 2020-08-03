@@ -12,7 +12,11 @@ export default class BaseRepository {
     await this.connection.insert(data).into(this.tableName);
   }
 
-  protected async find(data: any) {
-    return await this.connection.select("*").where(data).from(this.tableName);
+  protected async find(data: any, columns: string[] = ["*"]) {
+    return await this.connection
+      .column(columns)
+      .select()
+      .where(data)
+      .from(this.tableName);
   }
 }

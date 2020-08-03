@@ -18,4 +18,15 @@ export default class UserRepository extends BaseRepository
     const result = await this.find(data);
     return result.length > 0;
   }
+
+  public async getUsersByRole(role: string) {
+    const result = await this.find({ role }, [
+      "name",
+      "email",
+      "username",
+      "approved",
+    ]);
+
+    return result;
+  }
 }

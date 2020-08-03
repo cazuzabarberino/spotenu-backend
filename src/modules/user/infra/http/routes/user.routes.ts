@@ -7,6 +7,16 @@ const userRoute = Router();
 
 userRoute.post("/", userController.regularSignUp);
 userRoute.post("/band", userController.bandSignUp);
-userRoute.post("/admin", ensureAuthenticated, userController.adminSignUp);
+userRoute.post(
+  "/admin",
+  ensureAuthenticated({ admin: true }),
+  userController.adminSignUp
+);
+
+userRoute.get(
+  "/:role",
+  ensureAuthenticated({ admin: true }),
+  userController.listUsersByRole
+);
 
 export default userRoute;

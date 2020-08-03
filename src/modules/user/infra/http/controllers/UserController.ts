@@ -31,8 +31,6 @@ export default class UserController {
   public async adminSignUp(request: Request, response: Response) {
     const { name, username, email, password } = request.body;
 
-    if (request.user.role !== "admin") throw new AppError("Unauthorized", 401);
-
     const createUserService = new CreateUserService(
       new UserRepository(),
       new CryptoManager(),
@@ -71,5 +69,14 @@ export default class UserController {
     });
 
     response.json(serviceResponse);
+  }
+
+  public async listUsersByRole(request: Request, response: Response) {
+    const { role } = request.params;
+
+    const userRepository = new UserRepository();
+    const result = await userRepository.getUsersByRole(role);
+
+    response.json({ result });
   }
 }
