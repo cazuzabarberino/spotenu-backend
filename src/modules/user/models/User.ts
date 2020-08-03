@@ -4,6 +4,6 @@ export default interface User {
   username: string;
   email: string;
   password: string;
-  role: "admin" | "band" | "regular" | "premium";
+  role: string;
   approved: boolean;
 }

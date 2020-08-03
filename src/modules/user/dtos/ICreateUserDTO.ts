@@ -4,5 +4,5 @@ export default interface ICreateUserDTO {
   username: string;
   email: string;
   password: string;
-  role: "admin" | "band" | "regular" | "premium";
+  role: string;
 }
