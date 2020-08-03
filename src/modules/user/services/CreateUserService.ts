@@ -1,6 +1,8 @@
 import IUserRepository from "../repositories/IUserRepository";
 import AppError from "@shared/error";
 import User from "../models/User";
+import ICryptoManager from "@shared/utils/ICryptoManager";
+import IIDGenerator from "@shared/utils/IIDGenerator";
 
 interface IRequest {
   name: string;
@@ -11,7 +13,11 @@ interface IRequest {
 }
 
 export default class CreateUserService {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(
+    private userRepository: IUserRepository,
+    private cryptoManager: ICryptoManager,
+    private idGenerator: IIDGenerator
+  ) {}
 
   public async execute({
     name,
@@ -33,14 +39,22 @@ export default class CreateUserService {
     )
       throw new AppError("Invalid or missing role", 400);
 
-    const id = "lol";
+    if (await this.userRepository.userExist({ email }))
+      throw new AppError("Email already registered", 400);
+
+    if (await this.userRepository.userExist({ username }))
+      throw new AppError("Username already registered", 400);
+
+    const id = this.idGenerator.getId();
+
+    const hashedPassword = await this.cryptoManager.encrypt(password);
 
     const user = {
       id,
       email,
       name,
       username,
-      password,
+      password: hashedPassword,
       role,
       approved: false,
     };

@@ -11,4 +11,8 @@ export default class BaseRepository {
   protected async create(data: any) {
     await this.connection.insert(data).into(this.tableName);
   }
+
+  protected async find(data: any) {
+    return await this.connection.select("*").where(data).from(this.tableName);
+  }
 }
