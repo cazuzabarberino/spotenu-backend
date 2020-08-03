@@ -6,6 +6,7 @@ const userController = new UserController();
 const userRoute = Router();
 
 userRoute.post("/", userController.regularSignUp);
+userRoute.post("/band", userController.bandSignUp);
 userRoute.post("/admin", ensureAuthenticated, userController.adminSignUp);
 
 export default userRoute;

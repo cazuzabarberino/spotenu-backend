@@ -50,4 +50,26 @@ export default class UserController {
 
     response.json(serviceResponse);
   }
+
+  public async bandSignUp(request: Request, response: Response) {
+    const { name, username, email, password, description } = request.body;
+
+    const createUserService = new CreateUserService(
+      new UserRepository(),
+      new CryptoManager(),
+      new IDGenerator(),
+      new Authenticator()
+    );
+
+    const serviceResponse = await createUserService.execute({
+      name,
+      username,
+      email,
+      password,
+      role: "band",
+      description,
+    });
+
+    response.json(serviceResponse);
+  }
 }

@@ -16,7 +16,5 @@ export default function ensureAuthenticated(
 
   request.user = data;
 
-  console.log(request.user);
-
   return next();
 }
